@@ -1,6 +1,8 @@
 import tkinter as tk
 import time
 import random
+import sys
+import os
 
 
 class RememberNumberGame(tk.Tk):
@@ -68,10 +70,11 @@ class RememberNumberGame(tk.Tk):
         self.label = tk.Label(self.frame, text=f"Remember the numbers in {time_limit} seconds", font=("Helvetica", 15),
                               background="grey")
 
-        for x in range(4, 7):
-            for y in range(4, 7):
-                num = tk.StringVar(value=str(random.randint(10, 99)))
-                self.nums.append(num)
+        for y in range(4, 7):
+            for x in range(4, 7):
+                one_num = str(random.randint(10, 99))
+                num = tk.StringVar(value=one_num)
+                self.nums.append(one_num)
 
                 numb_label = tk.Label(self.frame, textvariable=num, font=("Helvetica", 15))
                 numb_label.place(relx=x/10, rely=y/10)
@@ -105,32 +108,57 @@ class RememberNumberGame(tk.Tk):
         self.button = tk.Button(self.frame, text="Ok", command=self.current_numb,
                                 background="#000000", font=("Helvetica", 15, "bold"), foreground="#FFFFFF")
 
-        self.entry = tk.Entry(self.frame)
-        self.result_nums = self.entry.get().split()
+        self.entry = tk.Entry(self.frame, width=25)
 
         self.button.place(relx=0.53, rely=0.6, anchor="center")
-        self.entry.place(rely=0.4, relx=0.4)
+        self.entry.place(rely=0.4, relx=0.38)
         self.frame.place(relx=0.5, rely=0.4, anchor="center")
         self.label.place(relx=0.53, rely=0.2, anchor="n")
 
     def compare_arrays(self):
         if self.result_nums == self.nums:
             self.result_message.set("You win")
+            self.result_frame()
         else:
             self.result_message.set("You lose")
+            self.result_frame()
+
+    def result_frame(self):
+        self.frame.place_forget()
+
+        self.frame = tk.Frame(self, width=500, height=600, background="grey")
+
+        self.label = tk.Label(self.frame, textvariable=self.result_message,
+                              font=("Helvetica", 15),
+                              background="grey")
+
+        self.button = tk.Button(self.frame, text="Exit", command=self.quit,
+                                background="#000000", font=("Helvetica", 15, "bold"), foreground="#FFFFFF")
+
+        restart_button = tk.Button(self.frame, text="Restart", command=self.restart_game,
+                                   background="#000000", font=("Helvetica", 15, "bold"), foreground="#FFFFFF")
+
+        self.button.place(rely=0.4, relx=0.48)
+        restart_button.place(rely=0.5, relx=0.45)
+        self.frame.place(relx=0.5, rely=0.4, anchor="center")
+        self.label.place(relx=0.53, rely=0.2, anchor="n")
 
     def current_numb(self):
         self.frame.place_forget()
         try:
+            self.result_nums = str(self.entry.get()).split()
+
+            if len(self.result_nums) != len(self.nums):
+                raise ValueError
             for elem in self.result_nums:
                 if not elem.isdigit():
-                    raise ValueError
-                elif 2 > len(elem) > 2:
                     raise ValueError
                 else:
                     self.compare_arrays()
         except ValueError:
             self.frame.place_forget()
+
+            self.frame = tk.Frame(self, width=500, height=600, background="grey")
 
             self.label = tk.Label(self.frame, text="Enter correct numbers!!",
                                   font=("Helvetica", 15),
@@ -139,9 +167,14 @@ class RememberNumberGame(tk.Tk):
             self.button = tk.Button(self.frame, text="Ok", command=self.create_entry_fields,
                                     background="#000000", font=("Helvetica", 15, "bold"), foreground="#FFFFFF")
 
-            self.button.place(rely=0.4, relx=0.4)
+            self.button.place(rely=0.4, relx=0.48)
             self.frame.place(relx=0.5, rely=0.4, anchor="center")
             self.label.place(relx=0.53, rely=0.2, anchor="n")
+
+    @staticmethod
+    def restart_game():
+        python = sys.executable
+        os.execl(python, python, *sys.argv)
 
 
 if __name__ == "__main__":
