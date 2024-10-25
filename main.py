@@ -5,8 +5,8 @@ import sys
 import os
 
 
-class RememberNumberGame(tk.Tk):
-    def __init__(self):
+class RememberNumberGame(tk.Tk):  # game class
+    def __init__(self):  # ctor
         super().__init__()
         self.title("Remember number")
         self.geometry("500x500+500+150")
@@ -35,7 +35,7 @@ class RememberNumberGame(tk.Tk):
         self.label.place(relx=0.5, rely=0.4, anchor="center")
         self.button.place(relx=0.5, rely=0.5, anchor="center", width=100, height=50)
 
-    def select_difficulty(self):
+    def select_difficulty(self):  # frame with choice of difficulty level
         self.frame.place_forget()
         self.frame = tk.Frame(self, width=500, height=600, background="grey")
 
@@ -53,7 +53,7 @@ class RememberNumberGame(tk.Tk):
         self.frame.place(relx=0.5, rely=0.4, anchor="center")
         self.button.place(relx=0.5, rely=0.6, anchor="center")
 
-    def start_game(self):
+    def start_game(self):  # frame with numbers
         self.frame.place_forget()
         if self.difficulty_var.get() == "Easy":
             time_limit = 30
@@ -84,19 +84,20 @@ class RememberNumberGame(tk.Tk):
 
         self.update_timer()
 
-    def update_timer(self):
+    def update_timer(self):  # timer update
         right_time = time.time() - self.start_time
         remaining_time = max(0, int(self.time_left - right_time))
 
         minutes, secs = divmod(remaining_time, 60)
         self.label.config(text=f"Remember the numbers in {int(minutes):02d}:{secs:05.2f} seconds")
+        # update label ^
 
         if remaining_time > 0:
             self.after(100, self.update_timer)
         else:
             self.create_entry_fields()
 
-    def create_entry_fields(self):
+    def create_entry_fields(self):  # frame with entry field
         self.frame.place_forget()
 
         self.frame = tk.Frame(self, width=500, height=600, background="grey")
@@ -115,7 +116,7 @@ class RememberNumberGame(tk.Tk):
         self.frame.place(relx=0.5, rely=0.4, anchor="center")
         self.label.place(relx=0.53, rely=0.2, anchor="n")
 
-    def compare_arrays(self):
+    def compare_arrays(self):  # comparison of original and input arrays
         if self.result_nums == self.nums:
             self.result_message.set("You win")
             self.result_frame()
@@ -123,7 +124,7 @@ class RememberNumberGame(tk.Tk):
             self.result_message.set("You lose")
             self.result_frame()
 
-    def result_frame(self):
+    def result_frame(self):  # frame with result and buttons exit, restart
         self.frame.place_forget()
 
         self.frame = tk.Frame(self, width=500, height=600, background="grey")
@@ -143,7 +144,7 @@ class RememberNumberGame(tk.Tk):
         self.frame.place(relx=0.5, rely=0.4, anchor="center")
         self.label.place(relx=0.53, rely=0.2, anchor="n")
 
-    def current_numb(self):
+    def current_numb(self):  # array input validation
         self.frame.place_forget()
         try:
             self.result_nums = str(self.entry.get()).split()
@@ -156,7 +157,7 @@ class RememberNumberGame(tk.Tk):
                 else:
                     self.compare_arrays()
         except ValueError:
-            self.frame.place_forget()
+            self.frame.place_forget()  # frame with message about error
 
             self.frame = tk.Frame(self, width=500, height=600, background="grey")
 
@@ -172,7 +173,7 @@ class RememberNumberGame(tk.Tk):
             self.label.place(relx=0.53, rely=0.2, anchor="n")
 
     @staticmethod
-    def restart_game():
+    def restart_game():  # restart programme
         python = sys.executable
         os.execl(python, python, *sys.argv)
 
