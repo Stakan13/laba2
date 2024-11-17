@@ -4,7 +4,7 @@ import random
 import sys
 import os
 
-
+# ебать ты наговнокодил полный класс дерьма в одном файле
 class RememberNumberGame(tk.Tk):  # game class
     def __init__(self):  # ctor
         super().__init__()
